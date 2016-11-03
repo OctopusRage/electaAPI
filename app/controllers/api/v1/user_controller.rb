@@ -20,6 +20,8 @@ class Api::V1::UserController < ApplicationController
       }, status:422
     end
   end
+  
+  
 
   private 
     def same_password

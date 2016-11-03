@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161103163543) do
+ActiveRecord::Schema.define(version: 20161103201746) do
 
   create_table "file_uploads", force: :cascade do |t|
     t.string   "raw"
@@ -32,6 +32,23 @@ ActiveRecord::Schema.define(version: 20161103163543) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rewards", force: :cascade do |t|
+    t.integer  "rewarder_id"
+    t.string   "rewarder_type"
+    t.string   "description"
+    t.string   "reward_type"
+    t.string   "reward_pict_url"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  create_table "user_followers", force: :cascade do |t|
+    t.integer  "follower_id"
+    t.integer  "following_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
   create_table "user_type_priviledges", force: :cascade do |t|
     t.integer  "priviledge_id"
     t.integer  "user_type_id"
@@ -47,6 +64,28 @@ ActiveRecord::Schema.define(version: 20161103163543) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "user_vote_logs", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "vote_option_before"
+    t.integer  "vote_option_after"
+    t.integer  "vote_id"
+    t.string   "action"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  create_table "user_votes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "vote_option_id"
+    t.integer  "vote_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "user_votes", ["user_id"], name: "index_user_votes_on_user_id"
+  add_index "user_votes", ["vote_id"], name: "index_user_votes_on_vote_id"
+  add_index "user_votes", ["vote_option_id"], name: "index_user_votes_on_vote_option_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
@@ -83,9 +122,47 @@ ActiveRecord::Schema.define(version: 20161103163543) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   add_index "users", ["user_type_id"], name: "index_users_on_user_type_id"
 
-  create_table "votes", force: :cascade do |t|
+  create_table "vote_categories", force: :cascade do |t|
+    t.string   "category"
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "vote_options", force: :cascade do |t|
+    t.string   "options"
+    t.integer  "vote_id"
+    t.string   "user_vote_pict"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "vote_options", ["vote_id"], name: "index_vote_options_on_vote_id"
+
+  create_table "vote_subscribers", force: :cascade do |t|
+    t.integer  "vote_id"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_index "vote_subscribers", ["user_id"], name: "index_vote_subscribers_on_user_id"
+  add_index "vote_subscribers", ["vote_id"], name: "index_vote_subscribers_on_vote_id"
+
+  create_table "votes", force: :cascade do |t|
+    t.string   "title"
+    t.string   "description"
+    t.integer  "category_id"
+    t.date     "started_at"
+    t.date     "ended_at"
+    t.integer  "user_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "vote_pict_url"
+    t.string   "status",        default: "open"
+  end
+
+  add_index "votes", ["category_id"], name: "index_votes_on_category_id"
+  add_index "votes", ["user_id"], name: "index_votes_on_user_id"
 
 end

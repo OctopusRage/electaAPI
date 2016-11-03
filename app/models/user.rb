@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   DEFAULT_ORIGIN_LAT  = -6.177
   DEFAULT_ORIGIN_LNG  = 106.8403
   
-  before_create :set_auth_token
+  before_create :set_auth_token, :set_lower_email
 
   validates :gender, inclusion: { in: VALID_GENDER },
     allow_blank: true, case_sensitive: false
@@ -18,7 +18,8 @@ class User < ActiveRecord::Base
     format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   
   belongs_to :user_type
-  has_many :file_uploads  
+  has_many :file_uploads, as: :uploader
+  has_many :votes  
 
   def set_lower_email
     self.email = self.email.downcase  
@@ -46,6 +47,14 @@ class User < ActiveRecord::Base
     if dob
       now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
     end
+  end
+
+  def as_simple_json(options={})
+    {
+      id: id, 
+      name: name,
+      image: image
+    }
   end
 
   def credential_as_json(options={})

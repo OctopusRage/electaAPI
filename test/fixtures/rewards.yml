@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rewarder_id: 1
+  rewarder_type: MyString
+  description: MyString
+  reward_type: MyString
+  reward_pict_url: MyString
+
+two:
+  rewarder_id: 1
+  rewarder_type: MyString
+  description: MyString
+  reward_type: MyString
+  reward_pict_url: MyString

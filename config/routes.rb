@@ -20,8 +20,12 @@ Rails.application.routes.draw do
         
         resources :user, only: [:create], controller: :user
         namespace :users do
-          resource :profile, only: [:show], controller: :profile 
+          resource :profile, only: [:show, :update], controller: :profile 
+          resource :sessions, only: [:create]
+          resource :vote, only: [:create, :show, :update, :delete], controller: :vote
         end
+        resources :votes, only: [:index, :show]
+
         namespace :files do
           resources :avatars, only: [:create] do
             member do
