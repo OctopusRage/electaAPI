@@ -19,9 +19,15 @@ class Api::V1::UserController < ApplicationController
         data: 'password didnt match'
       }, status:422
     end
+  end  
+
+  def show
+    user = User.find(params[:id]).as_profile_json
+    render json: {
+      status: 'success',
+      data: user
+    }, status:200
   end
-  
-  
 
   private 
     def same_password

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     scope defaults: { format: 'json' } do
       scope module: :v1, constraints: ApiVersion.new('v1', true) do
         
-        resources :user, only: [:create], controller: :user
+        resources :user, only: [:create, :show], controller: :user 
         namespace :users do
           resource :profile, only: [:show, :update], controller: :profile 
           resource :sessions, only: [:create]

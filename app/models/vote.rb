@@ -1,3 +1,4 @@
+include ActionView::Helpers::DateHelper
 class Vote < ActiveRecord::Base
   VALID_STATUS = %w(open closed draft)
 
@@ -43,7 +44,8 @@ class Vote < ActiveRecord::Base
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
-      options: vote_options
+      options: vote_options,
+      created_at: created_at
     }
   end
 
@@ -58,7 +60,8 @@ class Vote < ActiveRecord::Base
       started_at: started_at,
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
-      creator: creator || nil
+      creator: creator || nil,
+      created_at: created_at
     }
   end
 end

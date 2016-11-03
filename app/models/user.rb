@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   
   before_create :set_auth_token, :set_lower_email
 
+  validates :name, presence: true
   validates :gender, inclusion: { in: VALID_GENDER },
     allow_blank: true, case_sensitive: false
   validates :email, presence: true, length: { maximum: 255 },
@@ -69,10 +70,23 @@ class User < ActiveRecord::Base
       phone_number: phone_number ||"",
       verified: verified,
       city: city ||"",
+      province: province ||"",
       latitude: latitude || DEFAULT_ORIGIN_LAT,
       longitude: longitude ||DEFAULT_ORIGIN_LNG,
       image: image(options[:base_url]),
       authentication_token: authentication_token
+    }
+  end
+
+  def as_profile_json(options={})
+    {
+      id: id,
+      name: name,
+      gender: gender,
+      age: age(date_of_birth) || 0,
+      image: image(options[:base_url]),
+      city: city, 
+      province: province ||""
     }
   end
 
@@ -88,6 +102,7 @@ class User < ActiveRecord::Base
       phone_number: phone_number ||"",
       verified: verified,
       city: city ||"",
+      province: province ||"",
       latitude: latitude || DEFAULT_ORIGIN_LAT,
       longitude: longitude ||DEFAULT_ORIGIN_LNG,
       image: image(options[:base_url])

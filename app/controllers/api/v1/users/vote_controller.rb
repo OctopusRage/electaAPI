@@ -20,6 +20,21 @@ class Api::V1::Users::VoteController < ApplicationController
     end
   end
 
+  def update
+    vote = current_user.find(params[:id])
+    if vote.update(vote_params)
+      render json:{
+        status: 'success',
+        data: vote
+      }, status: 200
+    else
+      render json:{
+        status: 'fail',
+        data: vote.errors
+      }, status: 422
+    end
+  end
+
   def show
     votes = current_user.votes
     votes = votes.page(params[:page]) if params[:page]
