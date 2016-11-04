@@ -13,12 +13,4 @@ class Api::V1::VotesController < ApplicationController
     }, status: 200
   end
 
-  def show
-    vote = Vote.find(params[:id])
-    render json: {
-      status: 'success',
-      data: vote.as_detailed_json
-    }, status: 200
-  end
-
 end

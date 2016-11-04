@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   belongs_to :user_type
   has_many :file_uploads, as: :uploader
   has_many :votes  
+  has_many :user_votes  
 
   def set_lower_email
     self.email = self.email.downcase  

@@ -24,7 +24,12 @@ Rails.application.routes.draw do
           resource :sessions, only: [:create]
           resource :vote, only: [:create, :show, :update, :delete], controller: :vote
         end
-        resources :votes, only: [:index, :show]
+        resources :votes, only: [:index]
+
+        namespace :votes do
+          resource :participate, only: [:create, :update, :show], controller: :participate
+          resources :details, only: [:show]
+        end
 
         namespace :files do
           resources :avatars, only: [:create] do
