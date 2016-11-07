@@ -1,4 +1,5 @@
 include ActionView::Helpers::DateHelper
+include ActionView::Helpers::NumberHelper
 class Vote < ActiveRecord::Base
   VALID_STATUS = %w(open closed draft)
 
@@ -6,6 +7,8 @@ class Vote < ActiveRecord::Base
   belongs_to :user
   has_many :vote_options
   has_many :user_votes
+
+  before_destroy :delete_options
   
   validate :valid_date_range?
   validates :title, presence: true
@@ -30,13 +33,17 @@ class Vote < ActiveRecord::Base
     errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present? 
     if ended_at < started_at || ended_at < DateTime.now || started_at < DateTime.now 
       errors.add(message: 'invalid date range')
-    end+
+    end
   end
 
   def count_percentage(options_id)
     particpant_count = user_votes.count
-    current_opt_part_count = user_votes.where(options_id).count
-    current_opt_part_count.to_f/particpant_count.to_f *100
+    current_opt_part_count = user_votes.where(vote_option_id: options_id).count
+    number_to_percentage(((current_opt_part_count.to_f)/(particpant_count.to_f))*100, precision: 2)
+  end
+
+  def delete_options
+    user_votes.delete_all
   end
 
   def as_detailed_json
@@ -51,7 +58,7 @@ class Vote < ActiveRecord::Base
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
-      options: vote_options.each {|opt| opt},
+      options: vote_options,
       participant_count: user_votes.count || 0,
       created_at: created_at
     }

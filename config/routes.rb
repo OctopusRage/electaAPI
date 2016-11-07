@@ -22,7 +22,7 @@ Rails.application.routes.draw do
         namespace :users do
           resource :profile, only: [:show, :update], controller: :profile 
           resource :sessions, only: [:create]
-          resource :vote, only: [:create, :show, :update, :delete], controller: :vote
+          resource :vote, only: [:create, :show, :update, :destroy], controller: :vote
         end
         resources :votes, only: [:index]
 
