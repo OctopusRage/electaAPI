@@ -1,5 +1,4 @@
 include ActionView::Helpers::DateHelper
-include ActionView::Helpers::NumberHelper
 class Vote < ActiveRecord::Base
   VALID_STATUS = %w(open closed draft)
 
@@ -7,7 +6,8 @@ class Vote < ActiveRecord::Base
   belongs_to :user
   has_many :vote_options
   has_many :user_votes
-
+  has_many :file_uploads, as: :uploader
+  
   before_destroy :delete_options
   
   validate :valid_date_range?
@@ -31,35 +31,49 @@ class Vote < ActiveRecord::Base
     return if started_at.blank? && ended_at.blank?
     errors.add(message: 'invalid date range') if started_at.blank? && ended_at.present?
     errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present? 
-    if ended_at < started_at || ended_at < DateTime.now || started_at < DateTime.now 
       errors.add(message: 'invalid date range')
+    if ended_at < started_at || ended_at < DateTime.now || started_at < DateTime.now 
     end
   end
 
   def count_percentage(options_id)
     particpant_count = user_votes.count
     current_opt_part_count = user_votes.where(vote_option_id: options_id).count
-    number_to_percentage(((current_opt_part_count.to_f)/(particpant_count.to_f))*100, precision: 2)
+    '%.2f' % (((current_opt_part_count.to_f)/(particpant_count.to_f))*100)
+  end
+
+  def count_option_voter(options_id)
+    particpant_count = user_votes.count
+    current_opt_part_count = user_votes.where(vote_option_id: options_id).count
+    current_opt_part_count
   end
 
   def delete_options
     user_votes.delete_all
   end
 
-  def as_detailed_json
+  def image
+    if file_uploads.count > 0
+      file_uploads.last.url
+    else
+      ""
+    end
+  end
+
+  def as_detailed_json(options={})
     category = vote_category.as_simple_json if !vote_category.nil? 
     creator = user.as_simple_json if !user.nil?
     {
       id: id,
       title: title,
+      image: image, 
       description: description || "",
       category: category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
-      vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
       options: vote_options,
-      participant_count: user_votes.count || 0,
+      total_participant: user_votes.count || 0,
       created_at: created_at
     }
   end
@@ -70,13 +84,14 @@ class Vote < ActiveRecord::Base
     {
       id: id,
       title: title,
+      image: image,
       description: description || "",
       category: category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
-      participant_count: user_votes.count || 0,
+      total_participant: user_votes.count || 0,
       created_at: created_at
     }
   end

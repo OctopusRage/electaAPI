@@ -1,12 +1,12 @@
-class Api::V1::Files::VotesController < ApplicationController
+class Api::V1::Files::VoteOptionsController < ApplicationController
   before_action :authorize_user
   before_action :ensure_raw_file, only: :create
 
   def create
-    vote = Vote.find(params[:vote_id])
+    current_vote_options = current_user.votes.find(params[:vote_id]).vote_options.find(params[:vote_option_id])
     file_upload = FileUpload.create!(
       raw: @raw_file,
-      uploader: vote
+      uploader: current_vote_options
     )
 
     render json:{
@@ -20,7 +20,7 @@ class Api::V1::Files::VotesController < ApplicationController
       file_upload.raw.url, resource_type: 'auto',
       folder: folder)
     file_upload.update!(url: cloudinary['url'])
-    vote.update(vote_pict_url: file_upload.proxy_avatar)
+    current_vote_options.update(vote_opt_pict: file_upload.proxy_avatar)
     render json: {
       status: 'success',
       data: {
@@ -30,7 +30,7 @@ class Api::V1::Files::VotesController < ApplicationController
   end
 
   private
-
+  
   def ensure_raw_file
     @raw_file = params[:raw_file]
 

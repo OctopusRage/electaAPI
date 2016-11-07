@@ -1,7 +1,11 @@
 class Api::V1::Users::VoteController < ApplicationController
   before_action :authorize_user
   def show
-    current_user.votes
+    vote = current_user.votes.find(params[:id])
+    render json: {
+      status: 'success',
+      data: vote
+    }, status: 200
   end
 
   def create
@@ -49,7 +53,7 @@ class Api::V1::Users::VoteController < ApplicationController
     }, status: 200
   end
 
-def destroy
+  def destroy
     vote = current_user.votes.find(params[:vote_id])
     vote.delete
     render json: {
