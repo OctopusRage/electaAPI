@@ -5,6 +5,7 @@ class Vote < ActiveRecord::Base
   belongs_to :vote_category
   belongs_to :user
   has_many :vote_options
+  has_many :user_votes
   
   validate :valid_date_range?
   validates :title, presence: true
@@ -29,7 +30,13 @@ class Vote < ActiveRecord::Base
     errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present? 
     if ended_at < started_at || ended_at < DateTime.now || started_at < DateTime.now 
       errors.add(message: 'invalid date range')
-    end
+    end+
+  end
+
+  def count_percentage(options_id)
+    particpant_count = user_votes.count
+    current_opt_part_count = user_votes.where(options_id).count
+    current_opt_part_count.to_f/particpant_count.to_f *100
   end
 
   def as_detailed_json
@@ -38,13 +45,14 @@ class Vote < ActiveRecord::Base
     {
       id: id,
       title: title,
-      description: description,
+      description: description || "",
       category: category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
-      options: vote_options,
+      options: vote_options.each {|opt| opt},
+      participant_count: user_votes.count || 0,
       created_at: created_at
     }
   end
@@ -55,12 +63,13 @@ class Vote < ActiveRecord::Base
     {
       id: id,
       title: title,
-      description: description,
+      description: description || "",
       category: category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
+      participant_count: user_votes.count || 0,
       created_at: created_at
     }
   end

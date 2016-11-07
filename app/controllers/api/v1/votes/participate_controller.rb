@@ -33,5 +33,12 @@ class Api::V1::Votes::ParticipateController < ApplicationController
 			}, status: 422
 		end
 	end
-	
+
+	def destroy
+		vote = current_user.user_votes.find(params[:id])
+		vote.delete
+		render json: {
+			status: 'success'
+		}, status: 204
+	end
 end

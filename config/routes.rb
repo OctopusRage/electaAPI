@@ -27,12 +27,17 @@ Rails.application.routes.draw do
         resources :votes, only: [:index]
 
         namespace :votes do
-          resource :participate, only: [:create, :update, :show], controller: :participate
+          resource :participate, only: [:create, :update, :show, :destroy], controller: :participate
           resources :details, only: [:show]
         end
 
         namespace :files do
           resources :avatars, only: [:create] do
+            member do
+              get ':file(.:ext)', action: 'get'
+            end
+          end
+          resources :votes, only: [:create] do
             member do
               get ':file(.:ext)', action: 'get'
             end
