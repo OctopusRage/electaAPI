@@ -6,6 +6,9 @@ class Vote < ActiveRecord::Base
   belongs_to :user
   has_many :vote_options
   has_many :user_votes
+  has_many :file_uploads, as: :uploader
+  
+  before_destroy :delete_options
   
   validate :valid_date_range?
   validates :title, presence: true
@@ -35,24 +38,42 @@ class Vote < ActiveRecord::Base
 
   def count_percentage(options_id)
     particpant_count = user_votes.count
-    current_opt_part_count = user_votes.where(options_id).count
-    current_opt_part_count.to_f/particpant_count.to_f *100
+    current_opt_part_count = user_votes.where(vote_option_id: options_id).count
+    '%.2f' % (((current_opt_part_count.to_f)/(particpant_count.to_f))*100)
   end
 
-  def as_detailed_json
+  def count_option_voter(options_id)
+    particpant_count = user_votes.count
+    current_opt_part_count = user_votes.where(vote_option_id: options_id).count
+    current_opt_part_count
+  end
+
+  def delete_options
+    user_votes.delete_all
+  end
+
+  def image
+    if file_uploads.count > 0
+      file_uploads.last.url
+    else
+      ""
+    end
+  end
+
+  def as_detailed_json(options={})
     category = vote_category.as_simple_json if !vote_category.nil? 
     creator = user.as_simple_json if !user.nil?
     {
       id: id,
       title: title,
+      image: image, 
       description: description || "",
       category: category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
-      vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
-      options: vote_options.each {|opt| opt},
-      participant_count: user_votes.count || 0,
+      options: vote_options,
+      total_participant: user_votes.count || 0,
       created_at: created_at
     }
   end
@@ -63,13 +84,14 @@ class Vote < ActiveRecord::Base
     {
       id: id,
       title: title,
+      image: image,
       description: description || "",
       category: category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
       creator: creator || nil,
-      participant_count: user_votes.count || 0,
+      total_participant: user_votes.count || 0,
       created_at: created_at
     }
   end

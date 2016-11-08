@@ -43,6 +43,11 @@ Rails.application.routes.draw do
               get ':file(.:ext)', action: 'get'
             end
           end
+          resources :vote_options, only: [:create] do
+            member do
+              get ':file(.:ext)', action: 'get'
+            end
+          end
           resources :upload, only: [:create] do
             member do
               get ':file(.:ext)', action: 'get'

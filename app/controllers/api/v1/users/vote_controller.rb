@@ -45,6 +45,14 @@ class Api::V1::Users::VoteController < ApplicationController
     }, status: 200
   end
 
+  def destroy
+    vote = current_user.votes.find(params[:vote_id])
+    vote.delete
+    render json: {
+      status: 'success'
+    }, status:204
+  end
+
   
 
   private
