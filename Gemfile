@@ -47,6 +47,14 @@ group :development do
   gem 'figaro'
 end
 
+group :production do
+  # Use postgres as the main production database
+  gem 'pg'
+  # Use 12 factor gem for heroku deployment
+  gem 'rails_12factor'
+end
+
+
 #mailgun
 gem 'mailgun_rails'
 # Carrierwave uploader
