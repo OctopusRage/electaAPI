@@ -30,7 +30,7 @@ class Vote < ActiveRecord::Base
     errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present? 
     if ended_at < started_at || ended_at < DateTime.now || started_at < DateTime.now 
       errors.add(message: 'invalid date range')
-    end+
+    end
   end
 
   def count_percentage(options_id)

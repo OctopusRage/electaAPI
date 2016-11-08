@@ -1,9 +1,5 @@
 class Api::V1::Users::VoteController < ApplicationController
   before_action :authorize_user
-  def show
-    current_user.votes
-  end
-
   def create
     vote = current_user.votes.new(vote_params)
     vote.generate_vote_options(params[:options])
