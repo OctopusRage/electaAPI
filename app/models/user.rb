@@ -12,6 +12,10 @@ class User < ActiveRecord::Base
   AVAILABLE_DEGREE = [
     "SD","SMP","SMA","S1","S2","S3"
   ]  
+  AVAILABLE_JOB = [
+    "pns", "karyawan"
+  ]  
+
   before_create :set_auth_token, :set_lower_email, :set_lower_job
   
   validates :name, presence: true
@@ -19,8 +23,8 @@ class User < ActiveRecord::Base
     allow_blank: true, case_sensitive: false
   validates :email, presence: true, length: { maximum: 255 },
     format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
-  validates :degree, inclusion: { in: AVAILABLE_DEGREE }
-  validates :job, inclusion: { in: AVAILABLE_DEGREE }
+ 
+  
 
   belongs_to :user_type
   has_many :file_uploads, as: :uploader
