@@ -9,22 +9,32 @@ class User < ActiveRecord::Base
   DEFAULT_DATE_OF_BIRTH = "1970-01-01T07:00:00Z"
   DEFAULT_ORIGIN_LAT  = -6.177
   DEFAULT_ORIGIN_LNG  = 106.8403
+  AVAILABLE_DEGREE = [
+    "SD","SMP","SMA","S1","S2","S3"
+  ]  
+  before_create :set_auth_token, :set_lower_email, :set_lower_job
   
-  before_create :set_auth_token, :set_lower_email
-
   validates :name, presence: true
   validates :gender, inclusion: { in: VALID_GENDER },
     allow_blank: true, case_sensitive: false
   validates :email, presence: true, length: { maximum: 255 },
     format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
-  
+  validates :degree, inclusion: { in: AVAILABLE_DEGREE }
+  validates :job, inclusion: { in: AVAILABLE_DEGREE }
+
   belongs_to :user_type
   has_many :file_uploads, as: :uploader
   has_many :votes  
   has_many :user_votes  
 
   def set_lower_email
-    self.email = self.email.downcase  
+    self.email = self.email.downcase
+  end
+
+  def set_lower_job
+    if self.job.present?
+      self.job = self.job.downcase
+    end
   end
     
   def image(base_url=nil)

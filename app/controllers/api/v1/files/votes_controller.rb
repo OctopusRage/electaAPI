@@ -20,7 +20,7 @@ class Api::V1::Files::VotesController < ApplicationController
       file_upload.raw.url, resource_type: 'auto',
       folder: folder)
     file_upload.update!(url: cloudinary['url'])
-    vote.update(vote_pict_url: file_upload.proxy_avatar)
+    vote.update(vote_pict_url: file_upload.url)
     render json: {
       status: 'success',
       data: {

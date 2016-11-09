@@ -23,13 +23,17 @@ Rails.application.routes.draw do
           resource :profile, only: [:show, :update], controller: :profile 
           resource :sessions, only: [:create]
           resource :vote, only: [:create, :update, :destroy], controller: :vote
-          resource :locations, only: [:show]
         end
         resources :votes, only: [:index]
 
         namespace :votes do
           resource :participate, only: [:create, :update, :destroy], controller: :participate
           resources :details, only: [:show]
+        end
+
+        namespace :utilities do
+          resource :locations, only: [:show]
+          resources :degrees, only: [:index]
         end
 
         namespace :files do
