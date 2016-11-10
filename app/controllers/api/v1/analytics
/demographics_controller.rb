@@ -1,4 +1,4 @@
-class Api::V1::Analytics::DemographicsController < AppicationController
+class Api::V1::Analytics::DemographicsController < ApplicationController
 	before_action :authorize_user
 	def show
 		if params[:type] == "province"
