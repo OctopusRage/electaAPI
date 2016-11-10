@@ -3,7 +3,7 @@ class CreateVotes < ActiveRecord::Migration
     create_table :votes do |t|
       t.string :title
       t.string :description
-      t.references :category, index: true, foreign_key: true
+      t.references :vote_category, index: true, foreign_key: true
       t.date :started_at
       t.date :ended_at
       t.references :user, index: true, foreign_key: true
