@@ -36,6 +36,10 @@ Rails.application.routes.draw do
           resources :degrees, only: [:index]
         end
 
+        namespace :analyzes do
+          resource :demographics, only: [:show]
+        end
+
         namespace :files do
           resources :avatars, only: [:create] do
             member do
