@@ -17,10 +17,10 @@ Rails.application.routes.draw do
   namespace :api, path: '/', constraints: subdomain_constraint do
     scope defaults: { format: 'json' } do
       scope module: :v1, constraints: ApiVersion.new('v1', true) do
-        
-        resources :user, only: [:create, :show], controller: :user 
+
+        resources :user, only: [:create, :show], controller: :user
         namespace :users do
-          resource :profile, only: [:show, :update], controller: :profile 
+          resource :profile, only: [:show, :update], controller: :profile
           resource :sessions, only: [:create]
           resource :vote, only: [:create, :update, :destroy], controller: :vote
         end
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
         end
 
         namespace :analyzes do
-          resource :demographics, only: [:show]
+          get 'dashboard_chart' => 'dashboard_page#chart_stats'
         end
 
         namespace :files do

@@ -1,4 +1,4 @@
-class Api::V1::Analyzes::DashboardPage < ApplicationController
+class Api::V1::Analyzes::DashboardPageController < ApplicationController
 	before_action :authorize_user
 	def top_page
 		follower_count = UserFollower.where(following_id: current_user.id).count
@@ -16,14 +16,14 @@ class Api::V1::Analyzes::DashboardPage < ApplicationController
 
 	def chart_stats
 		payload = {}
-		if params[:based_on] == 'popular' 
+		if params[:based_on] == 'popular'
 			vote_id = Vote.joins(:user_votes)
 				.where("votes.user_id = ?", current_user.id)
 				.order("count_all DESC")
 				.group(:vote_id)
 				.count.try(:first).try(:first)
 		else
-			vote_id = Vote.last.id
+			vote_id = current_user.votes.last.id
 		end
 		vote = Vote.find(vote_id)
 		participant_count = vote.user_votes.count
@@ -37,13 +37,13 @@ class Api::V1::Analyzes::DashboardPage < ApplicationController
 
 		case x_filter
 		when "years"
-			grouped_query = "YEARS(user_votes.created_at)" 
+			grouped_query = "YEARS(user_votes.created_at)"
 		when "month"
 			grouped_query = "MONTH(user_votes.created_at)"
 		else
 			grouped_query = "DATE(user_votes.created_at)"
 		end
-				
+
 		filtered = user_vote.group(grouped_query, :gender).count if y_filter=="gender"
 		filtered = user_vote.group(grouped_query, :degree,).count if y_filter=="degree"
 		filtered = user_vote.group(grouped_query, :job).count if y_filter=="job"
@@ -56,7 +56,7 @@ class Api::V1::Analyzes::DashboardPage < ApplicationController
 					today_participant_count: today_participant_count,
 					top_profesion: top_profesion,
 					top_education: top_education
-				}
+				},
 				chart: {
 					filtered: filtered
 				}
