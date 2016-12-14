@@ -28,8 +28,10 @@ class User < ActiveRecord::Base
 
   belongs_to :user_type
   has_many :file_uploads, as: :uploader
+  has_many :user_follower, foreign_key: :follower_id, class_name: "UserFollower"
   has_many :votes  
   has_many :user_votes  
+  has_many :messages, foreign_key: "to", class_name: "Message"
 
   def set_lower_email
     self.email = self.email.downcase

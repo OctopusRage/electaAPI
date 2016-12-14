@@ -21,6 +21,13 @@ module ElectaAPI
     # config.i18n.default_locale = :de
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.middleware.insert_before 0, "Rack::Cors", debug: true, logger: (-> { Rails.logger }) do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :delete, :put, :patch, :options, :head]
+      end
+    end
+    
     config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :inline
   end

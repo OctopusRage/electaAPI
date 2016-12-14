@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   #
   # get 'secure' => 'secure#index'
   # get 'secure/logout' => 'secure#logout'
-
+  get '/' => 'static_pages#index'
   if ENV['API_SUBDOMAIN']
     subdomain_constraint = { subdomain: ENV['API_SUBDOMAIN'].split(',') }
   else
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         namespace :votes do
           resource :participate, only: [:create, :update, :destroy], controller: :participate
           resources :details, only: [:show]
+          resource :follows, only: [:create], controller: :follows_controller
         end
 
         namespace :utilities do
@@ -38,6 +39,7 @@ Rails.application.routes.draw do
 
         namespace :analyzes do
           get 'dashboard_chart' => 'dashboard_page#chart_stats'
+          get 'dashboard_top' => 'dashboard_page#top_page'
         end
 
         namespace :files do

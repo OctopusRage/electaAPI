@@ -27,7 +27,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 		end
 		vote = Vote.find(vote_id)
 		participant_count = vote.user_votes.count
-		today_participant_count = vote.where("DATE(user_votes.created_at) = ?", DateTime.now.to_date).count
+		today_participant_count = UserVote.where("DATE(user_votes.created_at) = ? AND vote_id = ?", DateTime.now.to_date, vote_id).count
 		user_vote =  UserVote.joins(:user).where("vote_id = ?", vote_id)
 		top_education = user_vote.order("count_all DESC").group(:degree).count.try(:first).try(:first)
 		top_profesion = user_vote.order("count_all DESC").group(:job).count.try(:first).try(:first)
@@ -47,6 +47,13 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 		filtered = user_vote.group(grouped_query, :gender).count if y_filter=="gender"
 		filtered = user_vote.group(grouped_query, :degree,).count if y_filter=="degree"
 		filtered = user_vote.group(grouped_query, :job).count if y_filter=="job"
+			hash_result = {}
+		filtered.map { |e| 
+			tmp_key_prim = e.first[0]
+			tmp_key = e.first[1]
+			tmp_val = e.second
+			hash_result = hash_result.merge("#{tmp_key_prim}" => {"#{tmp_key}" => tmp_val})
+		}
 		filtered = UserVote.joins(:vote_option).where("vote_options.vote_id = ?", vote_id).group(grouped_query, :vote_option).count if y_filter== "options"
 		render json:{
 			status: 'success',
@@ -58,7 +65,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 					top_education: top_education
 				},
 				chart: {
-					filtered: filtered
+					filtered: hash_result
 				}
 			}
 		}, status: 200

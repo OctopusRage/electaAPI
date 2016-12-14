@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161107153546) do
+ActiveRecord::Schema.define(version: 20161214141003) do
 
   create_table "file_uploads", force: :cascade do |t|
     t.string   "raw"
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(version: 20161107153546) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "url"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string   "subject"
+    t.integer  "from"
+    t.integer  "to"
+    t.text     "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "priviledges", force: :cascade do |t|
