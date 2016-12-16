@@ -23,11 +23,11 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				.group(:vote_id)
 				.count.try(:first).try(:first)
 		else
-			vote_id = current_user.votes.last.id
+			vote_id = current_user.votes.try(:last).try(:id)
 		end
 		if vote_id.nil?
 			render json: {
-				status: 'success', 
+				status: 'success',
 				data: {
 					empty_data: true
 				}
@@ -56,7 +56,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 			filtered = user_vote.group(grouped_query, :degree,).count if y_filter=="degree"
 			filtered = user_vote.group(grouped_query, :job).count if y_filter=="job"
 				hash_result = {}
-			filtered.map { |e| 
+			filtered.map { |e|
 				tmp_key_prim = e.first[0]
 				tmp_key = e.first[1]
 				tmp_val = e.second
