@@ -13,7 +13,7 @@ class Api::V1::Users::MessagesController < ApplicationController
     count = current_user.messages.count
     messages.page(params[:page]) if params[:page]
     messages.limit(params[:limit]) if params[:limit]
-    total_in_query = vote.count
+    total_in_query = messages.count
     render json: {
       status: 'success',
       data: {
