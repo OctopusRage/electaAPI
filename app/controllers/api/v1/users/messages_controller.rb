@@ -10,25 +10,40 @@ class Api::V1::Users::MessagesController < ApplicationController
 
   def index
     messages = current_user.messages
+    count = current_user.messages.count
     messages.page(params[:page]) if params[:page]
     messages.limit(params[:limit]) if params[:limit]
+    total_in_query = vote.count
     render json: {
       status: 'success',
-      data: messages
+      data: {
+        messages: messages,
+        count: count,
+        total: total_in_query
+      }
     }, status: 200
   end
 
   def create
-    message = current_user.messages.create(message_params)
-    if message.save
-      render json: {
-        status: 'success',
-        data: message
-      }, status: 201
+    if message_params[:to] = User.find_by(email: message_params[:to]).id
+      message = current_user.messages.create(message_params)
+      if message.save
+        render json: {
+          status: 'success',
+          data: message
+        }, status: 201
+      else
+        render json: {
+          status: 'fail',
+          data: message.errors.first
+        }, status: 422
+      end
     else
       render json: {
         status: 'fail',
-        data: message.errors.first
+        data: {
+          message: "user not found"
+        }
       }, status: 422
     end
   end
@@ -39,6 +54,14 @@ class Api::V1::Users::MessagesController < ApplicationController
     render json: {
       status: 'success'
     }, status:204
+  end
+
+  def sent_box
+    messages = Message.where(from: current_user.id)
+    render json: {
+      status: 'success',
+      data: messages
+    }, status: 200
   end
 
   private
