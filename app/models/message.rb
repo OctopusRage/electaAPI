@@ -1,4 +1,8 @@
 class Message < ActiveRecord::Base
+	validates :to, presence: true
+	validates :from, presence: true
+	validates :subject, presence: true
+	validates :message, presence: true
 	def as_json(options={})
 		to_name = User.find_by(id: to.to_i).try(:name)
 		to_email = User.find_by(id: to.to_i).try(:email)

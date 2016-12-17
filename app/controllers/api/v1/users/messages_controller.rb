@@ -10,9 +10,9 @@ class Api::V1::Users::MessagesController < ApplicationController
 
   def index
     messages = current_user.messages
-    messages.page(params[:page]) if params[:page]
-    messages.limit(params[:limit]) if params[:limit]
-    
+    messages = messages.page(params[:page]) if params[:page]
+    messages = messages.limit(params[:limit]) if params[:limit]
+
     render json: {
       status: 'success',
       data: {
@@ -22,8 +22,9 @@ class Api::V1::Users::MessagesController < ApplicationController
   end
 
   def create
-    if message_params[:to] = User.find_by(email: message_params[:to]).id
-      message = current_user.messages.create(message_params)
+    mp = message_params
+    if mp[:to] = User.find_by(email: mp[:to]).try(:id)
+      message = current_user.messages.create(mp)
       if message.save
         render json: {
           status: 'success',
