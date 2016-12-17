@@ -39,6 +39,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 			user_vote =  UserVote.joins(:user).where("vote_id = ?", vote_id)
 			top_education = user_vote.order("count_all DESC").group(:degree).count.try(:first).try(:first)
 			top_profesion = user_vote.order("count_all DESC").group(:job).count.try(:first).try(:first) || ""
+
 			modus_choice = vote.vote_options.as_json
 			modus_choice = modus_choice.max_by{|e| e[:total_voter]}
 			modus_choice = modus_choice[:options]
@@ -55,9 +56,18 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				grouped_query = "DATE(user_votes.created_at)"
 			end
 
-			filtered = user_vote.group(grouped_query, :gender).count if y_filter=="gender"
-			filtered = user_vote.group(grouped_query, :degree,).count if y_filter=="degree"
-			filtered = user_vote.group(grouped_query, :job).count if y_filter=="job"
+			case y_filter
+			when "degree"
+				grouped_query_y = "degree"
+			when "job"
+				grouped_query_y = "job"
+			else
+				grouped_query_y = "gender"
+			end
+
+			filtered = user_vote.group(grouped_query, grouped_query_y).count
+			max_category = user_vote.group(grouped_query_y).order("count_all DESC").count.try(:first) || ""
+			min_category = user_vote.group(grouped_query_y).order("count_all ASC").count.try(:first) || ""
 				hash_result = {}
 			filtered.map { |e|
 				tmp_key_prim = e.first[0]
@@ -74,7 +84,9 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 						today_participant_count: today_participant_count,
 						top_profesion: top_profesion,
 						top_education: top_education,
-						modus_choice: modus_choice
+						modus_choice: modus_choice,
+						max_value: max_category,
+						min_value: min_category
 					},
 					chart: {
 						filtered: hash_result
