@@ -10,16 +10,13 @@ class Api::V1::Users::MessagesController < ApplicationController
 
   def index
     messages = current_user.messages
-    count = current_user.messages.count
     messages.page(params[:page]) if params[:page]
     messages.limit(params[:limit]) if params[:limit]
-    total_in_query = messages.count
+    
     render json: {
       status: 'success',
       data: {
-        messages: messages,
-        count: count,
-        total: total_in_query
+        messages: messages
       }
     }, status: 200
   end
