@@ -3,7 +3,6 @@ class Message < ActiveRecord::Base
 		{
 			id: id, 
 			to: to, 
-			to_name: User.find(to).name,
 			from: from,
 			message: message,
 			created_at: created_at
