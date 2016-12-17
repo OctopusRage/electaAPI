@@ -10,6 +10,8 @@ class Api::V1::Users::MessagesController < ApplicationController
 
   def index
     messages = current_user.messages
+    messages.page(params[:page]) if params[:page]
+    messages.limit(params[:limit]) if params[:limit]
     render json: {
       status: 'success',
       data: messages
@@ -42,6 +44,6 @@ class Api::V1::Users::MessagesController < ApplicationController
   private
     def message_params
       params.permit(
-        :to ,:from ,:subject, :message)
+        :to ,:subject, :message)
     end
 end
