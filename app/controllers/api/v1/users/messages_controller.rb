@@ -3,7 +3,7 @@ class Api::V1::Users::MessagesController < ApplicationController
   def show
     message = current_user.messages.find(params[:id])
     render json: {
-      status: 'success', 
+      status: 'success',
       data: message
     }, status: 200
   end
@@ -11,7 +11,7 @@ class Api::V1::Users::MessagesController < ApplicationController
   def index
     messages = current_user.messages
     render json: {
-      status: 'success', 
+      status: 'success',
       data: messages
     }, status: 200
   end
@@ -22,14 +22,23 @@ class Api::V1::Users::MessagesController < ApplicationController
       render json: {
         status: 'success',
         data: message
-      }
+      }, status: 201
     else
       render json: {
-        status: 'fail', 
+        status: 'fail',
         data: message.errors.first
-      }
+      }, status: 422
     end
   end
+
+  def destroy
+    message = current_user.messages.find(params[:message_id])
+    message.delete
+    render json: {
+      status: 'success'
+    }, status:204
+  end
+
   private
     def message_params
       params.permit(

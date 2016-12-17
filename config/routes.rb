@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         resources :user, only: [:create, :show], controller: :user
         namespace :users do
           resource :profile, only: [:show, :update], controller: :profile
+          resources :messages, only: [:create, :index, :show, :destroy], controller: :profile
           resource :sessions, only: [:create]
           resource :vote, only: [:create, :update, :destroy], controller: :vote
         end
