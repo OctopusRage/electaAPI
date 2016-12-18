@@ -34,6 +34,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 			}, status: 200
 		else
 			vote = Vote.find(vote_id)
+			vote_title = vote.title
 			participant_count = vote.user_votes.count
 			today_participant_count = UserVote.where("DATE(user_votes.created_at) = ? AND vote_id = ?", DateTime.now.to_date, vote_id).count
 			user_vote =  UserVote.joins(:user).where("vote_id = ?", vote_id)
@@ -80,6 +81,8 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				status: 'success',
 				data: {
 					stat: {
+						vote_id: vote_id,
+						vote_name: vote_title,
 						participant_count: participant_count,
 						today_participant_count: today_participant_count,
 						top_profesion: top_profesion,
