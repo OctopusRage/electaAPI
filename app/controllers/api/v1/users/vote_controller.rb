@@ -33,6 +33,7 @@ class Api::V1::Users::VoteController < ApplicationController
 
   def index
     votes = current_user.votes
+    count = votes.count1
     votes = votes.page(params[:page]) if params[:page]
     votes = votes.limit(params[:limit]) if params[:limit]
     total = votes.count
@@ -40,6 +41,7 @@ class Api::V1::Users::VoteController < ApplicationController
       status: 'success',
       data: {
         votes: votes,
+        count: count,
         total: total
       }
     }, status: 200
