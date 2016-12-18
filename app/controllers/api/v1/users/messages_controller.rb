@@ -11,8 +11,9 @@ class Api::V1::Users::MessagesController < ApplicationController
   def index
     messages = current_user.messages
     total_count = current_user.messages.count
+
     messages = messages.page(params[:page]) if params[:page]
-    messages = messages.limit(params[:limit]) if params[:limit]
+    messages = messages.page(params[:page]).per(params[:limit]) if (params[:limit] && params[:page])
     count = messages.count
 
     render json: {
