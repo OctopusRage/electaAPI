@@ -23,7 +23,7 @@ Rails.application.routes.draw do
           resource :profile, only: [:show, :update], controller: :profile
           resources :messages, only: [:create, :index, :show, :destroy]
           resource :sessions, only: [:create]
-          resource :vote, only: [:create, :update, :destroy], controller: :vote
+          resources :vote, only: [:create, :update, :destroy, :index], controller: :vote
         end
         resources :votes, only: [:index]
 

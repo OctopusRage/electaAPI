@@ -82,7 +82,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				data: {
 					stat: {
 						vote_id: vote_id,
-						vote_name: vote_title,
+						vote_title: vote_title,
 						participant_count: participant_count,
 						today_participant_count: today_participant_count,
 						top_profesion: top_profesion,
