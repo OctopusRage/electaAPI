@@ -10,7 +10,7 @@ class Api::V1::Users::VoteController < ApplicationController
       }, status: 201
     else
       render json: {
-        status: 'fail', 
+        status: 'fail',
         data: vote.errors
       }, status: 422
     end
@@ -31,8 +31,9 @@ class Api::V1::Users::VoteController < ApplicationController
     end
   end
 
-  def show
+  def index
     votes = current_user.votes
+    count = votes.count
     votes = votes.page(params[:page]) if params[:page]
     votes = votes.limit(params[:limit]) if params[:limit]
     total = votes.count
@@ -40,6 +41,7 @@ class Api::V1::Users::VoteController < ApplicationController
       status: 'success',
       data: {
         votes: votes,
+        count: count,
         total: total
       }
     }, status: 200
@@ -53,7 +55,7 @@ class Api::V1::Users::VoteController < ApplicationController
     }, status:204
   end
 
-  
+
 
   private
     def vote_params
