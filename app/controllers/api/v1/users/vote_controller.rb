@@ -33,9 +33,11 @@ class Api::V1::Users::VoteController < ApplicationController
 
   def index
     votes = current_user.votes
+    votes = votes.order(id: :desc)
     count = votes.count
     votes = votes.page(params[:page]) if params[:page]
     votes = votes.limit(params[:limit]) if params[:limit]
+    votes = votes.page(params[:page]).per(params[:limit]) if (params[:limit] && params[:page])
     total = votes.count
     render json: {
       status: 'success',
