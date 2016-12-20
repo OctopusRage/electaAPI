@@ -31,6 +31,7 @@ Rails.application.routes.draw do
           resource :participate, only: [:create, :update, :destroy], controller: :participate
           resources :details, only: [:show]
           resource :follows, only: [:create], controller: :follows_controller
+          resources :categories, only: [:index, :create]
         end
 
         namespace :utilities do

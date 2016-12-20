@@ -52,7 +52,7 @@ class Api::V1::Users::MessagesController < ApplicationController
   end
 
   def destroy
-    message = current_user.messages.find(params[:message_id])
+    message = current_user.messages.find(params[:id])
     message.delete
     render json: {
       status: 'success'
