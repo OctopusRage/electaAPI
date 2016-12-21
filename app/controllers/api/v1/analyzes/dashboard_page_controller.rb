@@ -68,7 +68,9 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 
 			filtered = user_vote.group(grouped_query, grouped_query_y).count
 			max_category = user_vote.group(grouped_query_y).order("count_all DESC").count.try(:first) || ""
+			max_category = ["", ""] if max_category.nil?
 			min_category = user_vote.group(grouped_query_y).order("count_all ASC").count.try(:first) || ""
+			min_category = ["", ""] if min_category.nil?
 				hash_result = {}
 			filtered.map { |e|
 				tmp_key_prim = e.first[0]
