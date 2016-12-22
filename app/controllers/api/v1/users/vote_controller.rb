@@ -19,7 +19,7 @@ class Api::V1::Users::VoteController < ApplicationController
   end
 
   def update
-    vote = current_user.find(params[:id])
+    vote = current_user.votes.find(params[:id])
     if vote.update(vote_params)
       render json:{
         status: 'success',
