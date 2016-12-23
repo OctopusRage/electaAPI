@@ -79,7 +79,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 					tmp_key_prim = e.first[0]
 					tmp_key = e.first[1]
 					tmp_val = e.second
-					hash_result = hash_result.merge("#{tmp_key_prim}" => {"#{tmp_key}" => tmp_val})\
+					hash_result = hash_result.merge("#{tmp_key_prim}" => {"#{tmp_key}" => tmp_val})
 				else
 					hash_extra = hash_extra.merge({"#{e.first[1]}" => 0})
 				end
