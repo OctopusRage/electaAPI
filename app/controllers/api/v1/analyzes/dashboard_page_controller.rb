@@ -64,8 +64,8 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				
 				")
 			user_vote_cat =  UserVote.joins(:user).where("user_votes.vote_id  = ?", vote_id)
-			top_education = user_vote.order("count_all DESC").group(:degree).count.try(:first).try(:first) || ""
-			top_profesion = user_vote.order("count_all DESC").group(:job).count.try(:first).try(:first) || ""
+			top_education = user_vote_cat.order("count_all DESC").group(:degree).count.try(:first).try(:first) || ""
+			top_profesion = user_vote_cat.order("count_all DESC").group(:job).count.try(:first).try(:first) || ""
 
 			modus_choice = vote.vote_options.as_json
 			modus_choice = modus_choice.max_by{|e| e[:total_voter]}

@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         end
 
         namespace :analyzes do
+          resources :votes, only: [:show]
           get 'dashboard_chart' => 'dashboard_page#chart_stats'
           get 'dashboard_top' => 'dashboard_page#top_page'
         end

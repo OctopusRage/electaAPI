@@ -38,8 +38,12 @@ class Vote < ActiveRecord::Base
 
   def count_percentage(options_id)
     particpant_count = user_votes.count
-    current_opt_part_count = user_votes.where(vote_option_id: options_id).count
-    '%.2f' % (((current_opt_part_count.to_f)/(particpant_count.to_f))*100)
+    if particpant_count > 0
+      current_opt_part_count = user_votes.where(vote_option_id: options_id).count
+      '%.2f' % (((current_opt_part_count.to_f)/(particpant_count.to_f))*100)
+    else
+      0
+    end
   end
 
   def count_option_voter(options_id)
