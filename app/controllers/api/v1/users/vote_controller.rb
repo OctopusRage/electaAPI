@@ -52,7 +52,7 @@ class Api::V1::Users::VoteController < ApplicationController
 
   def destroy
     vote = current_user.votes.find(params[:id])
-    vote.delete
+    vote.destroy
     render json: {
       status: 'success'
     }, status:204
