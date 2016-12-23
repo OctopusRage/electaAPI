@@ -45,9 +45,9 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 			when "years"
 				grouped_query = "YEARS(user_votes.created_at)"
 			when "month"
-				grouped_query = "MONTH(user_votes.created_at)"
+				grouped_query = "EXTRACT(month from user_votes.created_at)"
 			else
-				grouped_query = "DATE(user_votes.created_at)"
+				grouped_query = "EXTRACT(year from user_votes.created_at)"
 			end
 
 			case y_filter
