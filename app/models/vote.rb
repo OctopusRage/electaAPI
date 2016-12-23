@@ -5,7 +5,7 @@ class Vote < ActiveRecord::Base
   belongs_to :vote_category
   belongs_to :user
   has_many :vote_options
-  has_many :user_votes, dependent: :destroy
+  has_many :user_votes
   has_many :file_uploads, as: :uploader
   
   before_destroy :delete_options
@@ -49,6 +49,7 @@ class Vote < ActiveRecord::Base
   end
 
   def delete_options
+    vote_options.delete_all
     user_votes.delete_all
   end
 
