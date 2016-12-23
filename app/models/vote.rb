@@ -70,6 +70,7 @@ class Vote < ActiveRecord::Base
     creator = user.as_simple_json if !user.nil?
     {
       id: id,
+      status: status,
       title: title,
       image: image, 
       description: description || "",
@@ -89,6 +90,7 @@ class Vote < ActiveRecord::Base
     {
       id: id,
       title: title,
+      status: status,
       image: image,
       description: description || "",
       category: category || "Uncategorized",
