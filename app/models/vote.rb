@@ -49,8 +49,8 @@ class Vote < ActiveRecord::Base
   end
 
   def delete_options
-    vote_options.delete_all
-    user_votes.delete_all
+    vote_options.destroy_all
+    user_votes.destroy_all
   end
 
   def image
