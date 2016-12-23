@@ -36,15 +36,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 			vote = Vote.find(vote_id)
 			vote_title = vote.title
 			participant_count = vote.user_votes.count
-			today_participant_count = UserVote.where("DATE(user_votes.created_at) = ? AND vote_id = ?", DateTime.now.to_date, vote_id).count
-			user_vote =  User.joins("LEFT JOIN user_votes ON users.id = user_votes.user_id AND user_votes.vote_id = #{vote_id}")
-			user_vote_cat =  UserVote.joins(:user).where("user_votes.vote_id  = ?", vote_id)
-			top_education = user_vote.order("count_all DESC").group(:degree).count.try(:first).try(:first) || ""
-			top_profesion = user_vote.order("count_all DESC").group(:job).count.try(:first).try(:first) || ""
-
-			modus_choice = vote.vote_options.as_json
-			modus_choice = modus_choice.max_by{|e| e[:total_voter]}
-			modus_choice = modus_choice[:options]
+			
 			y_filter = params[:y_filter]
 			x_filter = params[:x_filter]
 			grouped_query = ""
@@ -67,6 +59,18 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				grouped_query_y = "gender"
 			end
 
+			today_participant_count = UserVote.where("DATE(user_votes.created_at) = ? AND vote_id = ?", DateTime.now.to_date, vote_id).count
+			user_vote =  User.joins("LEFT JOIN user_votes ON users.id = user_votes.user_id AND user_votes.vote_id = #{vote_id} 
+				
+				")
+			user_vote_cat =  UserVote.joins(:user).where("user_votes.vote_id  = ?", vote_id)
+			top_education = user_vote.order("count_all DESC").group(:degree).count.try(:first).try(:first) || ""
+			top_profesion = user_vote.order("count_all DESC").group(:job).count.try(:first).try(:first) || ""
+
+			modus_choice = vote.vote_options.as_json
+			modus_choice = modus_choice.max_by{|e| e[:total_voter]}
+			modus_choice = modus_choice[:options]
+			
 			filtered = user_vote.group(grouped_query, grouped_query_y).count
 			max_category = user_vote_cat.group(grouped_query_y).order("count_all DESC").count.try(:first) || ""
 			max_category = ["", ""] if max_category.nil?

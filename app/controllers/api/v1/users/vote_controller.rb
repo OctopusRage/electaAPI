@@ -1,7 +1,6 @@
 class Api::V1::Users::VoteController < ApplicationController
   before_action :authorize_user
   def create
-    byebug
     vote = current_user.votes.new(vote_params)
 
     vote.generate_vote_options(params[:options])
