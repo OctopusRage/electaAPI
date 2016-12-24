@@ -63,7 +63,7 @@ class Api::V1::Users::VoteController < ApplicationController
 
   private
     def vote_params
-      params.permit(:title, :description, :category_id, :started_at, :ended_at, :options)
+      params.permit(:title, :description, :vote_category_id, :started_at, :ended_at, :options)
     end
 
 end
