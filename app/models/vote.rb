@@ -31,7 +31,7 @@ class Vote < ActiveRecord::Base
     return if started_at.blank? && ended_at.blank?
     errors.add(message: 'invalid date range') if started_at.blank? && ended_at.present?
     errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present? 
-    if ended_at < started_at || ended_at < DateTime.now || started_at < DateTime.now 
+    if ended_at < started_at || ended_at < (DateTime.now - 1.days) || started_at < (DateTime.now - 1.days)
       errors.add(message: 'invalid date range')
     end
   end
