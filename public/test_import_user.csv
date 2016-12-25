@@ -1,0 +1,3 @@
+email,password,name,gender,degree,job,city
+testimport.consumer111@mail.com,passwordconsumer1,Consumer 1,male,SMP,pegawai,Jakarta
+testimport.consumer222@mail.com,passwordconsumer2,Consumer 2,female,SD,others,Malang

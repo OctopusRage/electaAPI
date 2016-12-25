@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     scope defaults: { format: 'json' } do
       scope module: :v1, constraints: ApiVersion.new('v1', true) do
 
+        resources :import_csv, only: [:create], controller: :import_csv
         resources :user, only: [:create, :show], controller: :user
         namespace :users do
           resource :profile, only: [:show, :update], controller: :profile

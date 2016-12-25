@@ -1,3 +1,4 @@
+require 'csv'
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -67,6 +68,22 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.import(csv)
+    imported = Array.new
+    csv = CSV.new(csv, :headers => true) 
+    csv.each do |row|
+      data = row.to_hash
+      params = { name: data["name"], email: data["email"].try(:strip), password: data["password"].try(:strip), job: data["job"].try(:strip), degree: data["degree"].try(:strip), city: data["city"].try(:strip),gender: data["gender"].try(:strip) }
+      user = User.new(params)
+      if user.valid? 
+        user.save
+        imported.push( user )
+      end
+    end
+
+    return imported
+  end
+
   def as_simple_json(options={})
     {
       id: id,
@@ -101,6 +118,8 @@ class User < ActiveRecord::Base
       name: name,
       gender: gender,
       age: age(date_of_birth) || 0,
+      date_of_birth: dob,
+      job: job,
       image: image(options[:base_url]),
       city: city,
       province: province ||""
@@ -116,6 +135,7 @@ class User < ActiveRecord::Base
       gender: gender,
       age: age(date_of_birth) || 0,
       date_of_birth: dob,
+      job: job,
       phone_number: phone_number ||"",
       verified: verified,
       city: city ||"",
