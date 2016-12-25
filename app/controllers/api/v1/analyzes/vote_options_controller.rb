@@ -23,8 +23,8 @@ class Api::V1::Analyzes::VoteOptionsController < ApplicationController
 					top_education: top_education,
 					top_profesion: top_profesion,
 					top_region: top_region
-				}, status: 200
-			}
+				}
+			}, status: 200
 		else
 			render json: {
 				status: 'fail',
