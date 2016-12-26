@@ -1,29 +1,56 @@
 class Api::V1::Users::MessagesController < ApplicationController
   before_action :authorize_user
   def show
-    message = current_user.messages.find(params[:id])
-    render json: {
-      status: 'success',
-      data: message
-    }, status: 200
+    message = Message.find(to: params[:id])
+    if message
+      if message.to == current_user.id
+        render json: {
+          status: 'success',
+          data: message
+        }, status: 200
+      else
+        render json: {
+          status: 'fail',
+          data: {
+            messages: 'Messaage not found'
+          }
+        }, status: 422
+      end
+    else
+      render json: {
+        status: 'fail',
+        data: {
+          messages: 'Fail to fetch inbox'
+        }
+      }, status: 422
+    end
   end
 
   def index
     messages = Message.where(to: current_user.id)
-    total_count = messages.count
-    messages = messages.limit(params[:limit]) if params[:limit]
-    messages = messages.page(params[:page]) if params[:page]
-    messages = messages.page(params[:page]).per(params[:limit]) if (params[:limit] && params[:page])
-    count = messages.count
+    if messages
+      total_count = messages.count
+      messages = messages.limit(params[:limit]) if params[:limit]
+      messages = messages.page(params[:page]) if params[:page]
+      messages = messages.page(params[:page]).per(params[:limit]) if (params[:limit] && params[:page])
+      count = messages.count
 
-    render json: {
-      status: 'success',
-      data: {
-        messages: messages,
-        count: count,
-        total: total_count
-      }
-    }, status: 200
+      render json: {
+        status: 'success',
+        data: {
+          messages: messages,
+          count: count,
+          total: total_count
+        }
+      }, status: 200
+    else
+      render json: {
+        status: 'fail',
+        data: {
+          messages: 'Fail to fetch inbox'
+        }
+      }, status: 422
+    end
   end
 
   def create
