@@ -161,17 +161,17 @@ ActiveRecord::Schema.define(version: 20161214141003) do
   create_table "votes", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
-    t.integer  "vote_category_id"
+    t.integer  "category_id"
     t.date     "started_at"
     t.date     "ended_at"
     t.integer  "user_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "vote_pict_url"
-    t.string   "status",           default: "open"
+    t.string   "status",        default: "open"
   end
 
+  add_index "votes", ["category_id"], name: "index_votes_on_category_id"
   add_index "votes", ["user_id"], name: "index_votes_on_user_id"
-  add_index "votes", ["vote_category_id"], name: "index_votes_on_vote_category_id"
 
 end

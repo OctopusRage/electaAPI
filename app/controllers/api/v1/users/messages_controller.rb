@@ -9,8 +9,8 @@ class Api::V1::Users::MessagesController < ApplicationController
   end
 
   def index
-    messages = current_user.messages
-    total_count = current_user.messages.count
+    messages = Message.where(to: current_user.id)
+    total_count = messages.count
     messages = messages.limit(params[:limit]) if params[:limit]
     messages = messages.page(params[:page]) if params[:page]
     messages = messages.page(params[:page]).per(params[:limit]) if (params[:limit] && params[:page])
