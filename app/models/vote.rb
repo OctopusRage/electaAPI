@@ -93,7 +93,7 @@ class Vote < ActiveRecord::Base
       status: status,
       image: image,
       description: description || "",
-      category: category || "Uncategorized",
+      category: category.category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
       vote_pict_url: vote_pict_url || "",
