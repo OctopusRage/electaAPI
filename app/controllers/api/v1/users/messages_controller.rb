@@ -1,7 +1,7 @@
 class Api::V1::Users::MessagesController < ApplicationController
   before_action :authorize_user
   def show
-    message = Message.find(to: params[:id])
+    message = Message.find(params[:id])
     if message
       if message.to == current_user.id
         render json: {
