@@ -7,9 +7,9 @@ class DummyGenerator
     end
   end
 
-  def self.updateUserVote(from, to)
+  def self.updateUserVote(from, to, till)
     (from..to).each do |i|
-      rnd_date = generateRandom(1,60).days.ago
+      rnd_date = generateRandom(1,till).days.ago
       UserVote.find(i).update(created_at: rnd_date)
     end
   end
