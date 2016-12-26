@@ -116,6 +116,7 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 						today_participant_count: today_participant_count,
 						top_profesion: top_profesion,
 						top_education: top_education,
+						top_region: top_region,
 						modus_choice: modus_choice,
 						max_value: max_category,
 						min_value: min_category
