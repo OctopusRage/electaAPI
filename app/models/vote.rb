@@ -7,9 +7,9 @@ class Vote < ActiveRecord::Base
   has_many :vote_options
   has_many :user_votes
   has_many :file_uploads, as: :uploader
-  
-  
-  
+
+
+
   validate :valid_date_range?
   validates :title, presence: true
   validates :user_id, presence:true
@@ -24,13 +24,13 @@ class Vote < ActiveRecord::Base
 		options.each do |option|
 			vote_option = self.vote_options.build(options: option)
 			vote_option.save
-		end 
+		end
 	end
 
   def valid_date_range?
     return if started_at.blank? && ended_at.blank?
     errors.add(message: 'invalid date range') if started_at.blank? && ended_at.present?
-    errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present? 
+    errors.add(message: 'invalid date range') if ended_at.blank? && started_at.present?
     if ended_at < started_at || ended_at < (DateTime.now - 1.days) || started_at < (DateTime.now - 1.days)
       errors.add(message: 'invalid date range')
     end
@@ -66,15 +66,15 @@ class Vote < ActiveRecord::Base
   end
 
   def as_detailed_json(options={})
-    category = vote_category.as_simple_json if !vote_category.nil? 
+    category = vote_category.as_simple_json if !vote_category.nil?
     creator = user.as_simple_json if !user.nil?
     {
       id: id,
       status: status,
       title: title,
-      image: image, 
+      image: image,
       description: description || "",
-      category: category || "Uncategorized",
+      category: category.category || "Uncategorized",
       started_at: started_at,
       ended_at: ended_at,
       creator: creator || nil,
@@ -85,7 +85,7 @@ class Vote < ActiveRecord::Base
   end
 
   def as_json(options={})
-    category = vote_category.as_simple_json if !vote_category.nil? 
+    category = vote_category.as_simple_json if !vote_category.nil?
     creator = user.as_simple_json if !user.nil?
     {
       id: id,
