@@ -10,7 +10,6 @@ class Vote < ActiveRecord::Base
 
 
 
-  validate :valid_date_range?
   validates :title, presence: true
   validates :user_id, presence:true
   validates :status, inclusion: { in: VALID_STATUS },
