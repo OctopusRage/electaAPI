@@ -33,6 +33,8 @@ class Api::V1::Analyzes::VoteStatisticsController < ApplicationController
 				grouped_query_y = "degree"
 			when "job"
 				grouped_query_y = "job"
+			when "city"
+				grouped_query_y = "city"
 			else
 				grouped_query_y = "gender"
 			end
@@ -60,9 +62,20 @@ class Api::V1::Analyzes::VoteStatisticsController < ApplicationController
 					tmp_key_prim = e.first[0]
 					tmp_key = e.first[1]
 					tmp_val = e.second
-					hash_result = hash_result.merge("#{tmp_key_prim}" => {"#{tmp_key}" => tmp_val})
+					if hash_result["#{tmp_key_prim}"].nil?
+						hash_result = hash_result.merge("#{tmp_key_prim}" => {"#{tmp_key}" => tmp_val})
+						hash_extra = hash_extra.merge({"#{tmp_key}" => 0})
+					else
+						if hash_result["#{tmp_key_prim}"]["#{tmp_key}"].nil? 
+							hash_result["#{tmp_key_prim}"]["#{tmp_key}"] = tmp_val
+							hash_extra = hash_extra.merge({"#{tmp_key}" => 0})
+						else
+							hash_result["#{tmp_key_prim}"]["#{tmp_key}"] = hash_result["#{tmp_key_prim}"]["#{tmp_key}"]+tmp_val
+							hash_extra = hash_extra.merge({"#{tmp_key}" => 0})
+						end
+					end
 				else
-					hash_extra = hash_extra.merge({"#{e.first[1]}" => 0})
+					
 				end
 			}
 			hash_result_final = {}

@@ -55,6 +55,8 @@ class Api::V1::Analyzes::DashboardPageController < ApplicationController
 				grouped_query_y = "degree"
 			when "job"
 				grouped_query_y = "job"
+			when "city"
+				grouped_query_y = "city"
 			else
 				grouped_query_y = "gender"
 			end
