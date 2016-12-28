@@ -1,4 +1,4 @@
-class FollowsController < ApplicationController
+class Api::V1::Users::FollowsController < ApplicationController
 	before_action :authorize_user
 	def create
 		follow = UserFollower.new(follower_id: current_user.id, following_id: params[:id])

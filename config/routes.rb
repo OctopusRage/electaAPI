@@ -25,7 +25,7 @@ Rails.application.routes.draw do
           resources :messages, only: [:create, :index, :show, :destroy]
           resource :sessions, only: [:create]
           resources :vote, only: [:create, :update, :destroy, :index], controller: :vote
-          resource :follows, only: [:create], controller: :follows_controller
+          resource :follows, only: [:create], controller: :follows
         end
         resources :votes, only: [:index]
 
