@@ -25,13 +25,13 @@ Rails.application.routes.draw do
           resources :messages, only: [:create, :index, :show, :destroy]
           resource :sessions, only: [:create]
           resources :vote, only: [:create, :update, :destroy, :index], controller: :vote
+          resource :follows, only: [:create], controller: :follows_controller
         end
         resources :votes, only: [:index]
 
         namespace :votes do
           resource :participate, only: [:create, :update, :destroy], controller: :participate
           resources :details, only: [:show]
-          resource :follows, only: [:create], controller: :follows_controller
           resources :categories, only: [:index, :create]
         end
 
